@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Currently Playing...</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+  </head>
+  <style>
+    #cover {
+      position: absolute;
+      z-index: 1;
+      width: calc(var(--vw, 0.3vw) * 100);
+      height: calc(var(--vw, 0.3vw) * 100);
+      top: 14%;
+      left: 45%;
+      transform: translate(-50%, 0);
+      background-size: 100% 100%;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    #vinylwrap {
+      position: absolute;
+      width: calc(var(--vw, 0.3vw) * 100);
+      height: calc(var(--vw, 0.3vw) * 100);
+      top: 14%;
+      left: 45%;
+      transform: translate(-50%, 0);
+      background-size: 100% 100%;
+      background-image: url("images/vinyl.png");
+      animation: spinning 25s 0s infinite;
+      filter: drop-shadow(0px 5px 15px #222);
+    }
+
+    h1 {
+      text-align: center;
+      font-family: Georgia;
+      font-size: 50px;
+    }
+
+    #description {
+      font-family: Georgia;
+      margin-top: 35%;
+      text-align: center;
+      line-height: 150%;
+      font-size: 25px;
+    }
+
+    @keyframes spinning {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media screen and (max-width: 1200px) {
+      #vinylwrap {
+        width: calc(var(--vw, 0.4vw) * 100);
+        height: calc(var(--vw, 0.4vw) * 100);
+      }
+
+      #cover {
+        width: calc(var(--vw, 0.4vw) * 100);
+        height: calc(var(--vw, 0.4vw) * 100);
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      #description {
+        margin-top: 55%;
+      }
+    }
+  </style>
+  <body>
+    <h1>Now playing:</h1>
+    <div id="container">
+      <div id="cover"></div>
+
+      <div id="vinylwrap"></div>
+    </div>
+
+    <h3 id="description"></h3>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="text/javascript">
+      $.getJSON(
+        "https://s9.reliastream.com:2199/rpc/meyima03/streaminfo.get",
+        function (data) {
+          // artist name, song title, URL album
+          var song_title = data.data[0]["track"]["title"];
+          var artist_name = data.data[0]["track"]["artist"];
+          var album_URL = data.data[0]["track"]["imageurl"];
+          var time = data.data[0]["time"];
+
+          $("#cover").css("background-image", `url("${album_URL}")`);
+          $("#description").html(
+            `Song title: ${song_title} <br> Artist: ${artist_name} <br> Time: ${time} HST`
+          );
+        }
+      );
+    </script>
+  </body>
+</html>
